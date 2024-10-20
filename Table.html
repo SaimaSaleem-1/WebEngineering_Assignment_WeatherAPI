@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .cursive-font {
+            font-family: 'Comic Neue', cursive;
+        }
+        /* Custom styles to ensure cursive font and specific colors */
+        .font-cursive {
+            font-family: 'Comic Neue', cursive;
+        }
+        .bg-custom-gradient {
+            background: linear-gradient(to right, #094968, #15719f, #2C2C54);
+        }
+        .bg-dashboard {
+            background-color: #15719f;
+            transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+        }
+        /* Removed hover effects from the buttons */
+        .bg-dashboard:hover {
+            background-color: #15719f; /* Keep the same background on hover */
+            box-shadow: none; /* Remove shadow on hover */
+        }
+        .bg-container {
+            background-color: #dde8ef;
+        }
+        /* Table styling for borders */
+        table {
+            border-collapse: collapse; /* Ensures borders collapse into a single border */
+            width: 100%; /* Ensures table takes full width */
+        }
+        th, td {
+            border: 1px solid #ddd; /* Border for each cell */
+            padding: 8px; /* Padding inside cells */
+            text-align: left; /* Align text to the left */
+        }
+        th {
+            background-color: #15719f; /* Background color for headers */
+            color: white; /* Text color for headers */
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Zebra striping for even rows */
+        }
+    </style>
+</head>
+<body class="bg-custom-gradient p-6">
+    <div class="bg-container rounded-3xl w-full max-w-[1830px] h-auto mx-auto relative pb-10"> <!-- Added pb-10 for bottom padding -->
+        <!-- Dashboard Sidebar -->
+        <div class="absolute left-0 top-0 bg-dashboard w-[220px] h-full rounded-l-3xl">
+            <div class="logo flex justify-center">
+                <img src="logo.png" alt="Weather Logo" class="rounded-full w-[150px] h-[140px] m-6">
+            </div>
+            <div class="sidebar flex flex-col gap-5 px-4">
+                <a href="Dashboard.html">
+                    <button id="dashboardButton" class="w-full bg-dashboard text-white h-[50px] text-xl font-cursive">
+                        DASHBOARD
+                    </button>
+                </a>
+                <a href="Table.html">
+                    <button id="tableButton" class="w-full bg-dashboard text-white h-[50px] text-xl font-cursive">
+                        <strong>TABLE</strong>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="ml-[240px] pt-8">
+            <div class="searchbar flex justify-center items-center mb-8">
+                <div class="relative w-full max-w-[550px]">
+                    <input type="text" id="searchbar" placeholder="Search for a city" 
+                           class="w-full h-[45px] rounded-full border-2 border-[#15719f] pl-10 pr-32 text-xl font-cursive text-[#15719f] focus:outline-none">
+                    <button id="searchButton" 
+                            class="absolute right-0 top-0 bg-dashboard text-white h-[45px] px-8 rounded-full text-lg font-cursive">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-4 mb-6 px-4">
+                <button id="sortAscBtn" class="bg-dashboard text-white px-4 py-2 rounded-xl font-cursive">
+                    Sort Temperature (Asc)
+                </button>
+                <button id="sortDescBtn" class="bg-dashboard text-white px-4 py-2 rounded-xl font-cursive">
+                    Sort Temperature (Desc)
+                </button>
+                <button id="filterRainyBtn" class="bg-dashboard text-white px-4 py-2 rounded-xl font-cursive">
+                    Show Rainy Days (Rainy)
+                </button>
+                <button id="highestTempBtn" class="bg-dashboard text-white px-4 py-2 rounded-xl font-cursive">
+                    Highest Temperature
+                </button>
+                <button id="all" class="bg-dashboard text-white px-4 py-2 rounded-xl font-cursive">
+                    All Weather Forecast
+                </button>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex flex-wrap gap-6 px-4 pb-8"> <!-- Added pb-8 for bottom padding -->
+                <!-- Weather Table -->
+                <div class="table-data border-2 border-[#15719f] rounded-lg w-full max-w-[700px] lg:max-w-[900px] h-auto overflow-hidden"> <!-- Updated for larger screens -->
+                    <table id="forecast-table">
+                        <thead>
+                            <tr>
+                                <th class="text-lg font-cursive font-normal">Date</th>
+                                <th class="text-lg font-cursive font-normal">Temperature</th>
+                                <th class="text-lg font-cursive font-normal">Weather</th>
+                            </tr>
+                        </thead>
+                        <tbody id="forecast-body">
+                            <!-- Table content will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <!-- Removed pagination buttons -->
+                </div>
+
+                <!-- Chat Section -->
+                <div class="chat-with-gemine border-2 border-[#15719f] rounded-lg w-full max-w-[500px] lg:max-w-[600px] h-auto relative"> <!-- Updated for larger screens -->
+                    <div id="chat-messages" class="h-[480px] overflow-y-auto p-6 text-[#15719f] text-xl font-cursive">
+                        <!-- Chat messages will be populated by JavaScript -->
+                    </div>
+                    <div class="absolute bottom-6 left-6 right-6 flex gap-4">
+                        <input type="text" id="chat-input" placeholder="Ask me about the weather!"
+                               class="flex-1 h-[50px] rounded-full border-2 border-[#15719f] px-6 text-lg font-cursive text-[#15719f] focus:outline-none">
+                        <button id="chat-send" class="bg-dashboard text-white px-6 rounded-full text-lg font-cursive">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Profile -->
+        <div class="user-profile absolute top-6 right-6 hidden md:block"> <!-- Hidden on small screens -->
+            <img src="profile.jpg" alt="User Profile" class="rounded-full w-[50px] h-[50px] md:w-[70px] md:h-[70px] lg:w-[90px] lg:h-[90px] object-cover"> <!-- Updated for responsiveness -->
+        </div>
+    </div>
+
+    <script src="table.js"></script>
+</body>
+</html>

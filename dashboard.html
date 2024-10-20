@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap');
+
+        .cursive-font {
+            font-family: 'Comic Neue', cursive;
+        }
+        /* Custom styles to ensure cursive font and specific colors */
+        .bg-dashboard {
+            background-color: #15719f;
+            transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+        }
+
+        .bg-dashboard:hover {
+            background-color: #0d5c84; /* Darker background on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+        }
+
+        /* Background for clear sky */
+        .clear-sky-background {
+            background-image: url('https://media.istockphoto.com/id/1128410927/photo/blue-sky-background-and-white-clouds-soft-focus-and-copy-space.webp?a=1&b=1&s=612x612&w=0&k=20&c=Q9sgusJSX1qcUKKfrPgVaZoMxORGwFXkD6PHQzZ0KXQ=');
+            background-size: cover;
+            background-position: center;
+            border: 5px solid #15719f; /* Border added */
+        }
+
+        /* Background for cloudy weather */
+        .cloudy-background {
+            background-image: url('https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y2xlYXIlMjBza3klMjBwaWN0dXJlc3xlbnwwfHwwfHx8MA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            border: 5px solid #15719f; /* Border added */
+        }
+
+        /* Background for rainy weather */
+        .rainy-background {
+            background-image: url('snowy.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 5px solid #15719f; /* Border added */
+        }
+
+        /* Background for thunderstorm */
+        .stormy-background {
+            background-image: url('https://cdn.pixabay.com/photo/2012/10/26/03/29/thunderstorm-63205_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 5px solid #15719f; /* Border added */
+        }
+
+        /* Background for snowy weather */
+        .snowy-background {
+            background-image: url('https://cdn.pixabay.com/photo/2017/09/27/01/16/koryaksky-volcano-2790656_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 5px solid #15719f; /* Border added */
+        }
+
+        /* Default background for unrecognized weather */
+        .default-background {
+            background-image: url('https://cdn.pixabay.com/photo/2023/05/30/15/53/landscape-8029037_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 5px solid #15719f; /* Border added */
+        }
+
+        #weatherIcon {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-right: 16px;
+        }
+
+        @media (min-width: 768px) {
+            #weatherIcon {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        .weather-data {
+            padding: 20px; /* Padding for weather data box */
+            text-align: left; /* Left alignment */
+        }
+
+        .chart-container {
+            margin-top: 20px; /* Margin to separate charts from weather data */
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-r from-[#094968] via-[#15719f] to-[#2C2C54] p-2 sm:p-4 md:p-6 min-h-screen">
+    <div class="bg-[#dde8ef] rounded-[30px] w-full max-w-[1830px] min-h-[780px] mx-auto relative flex flex-col md:flex-row">
+        <!-- Dashboard Sidebar -->
+        <div class="bg-dashboard rounded-[20px] w-full md:w-[220px] md:min-h-full p-4">
+            <div class="flex justify-center md:justify-start">
+                <img src="logo.png" class="h-[100px] w-[100px] md:h-[140px] md:w-[150px] rounded-full">
+            </div>
+
+            <div class="flex flex-row md:flex-col gap-2 md:gap-5 mt-2 md:mt-5 justify-center">
+                <button id="dashboardButton"
+                    class="w-1/2 md:w-full h-[50px] text-white cursive-font text-base md:text-xl hover:bg-[#0d5c84] transition-colors">
+                    <strong>DASHBOARD</strong>
+                </button>
+                <a href="Table.html" class="w-1/2 md:w-full">
+                    <button id="tableButton"
+                        class="w-full h-[50px] text-white cursive-font text-base md:text-xl hover:bg-[#0d5c84] transition-colors">
+                        TABLE
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-4 md:p-6">
+            <!-- Search Bar -->
+            <div class="flex items-center justify-center mb-4 md:mb-8">
+                <div class="relative w-full max-w-[550px]">
+                    <input type="text" id="searchbar" placeholder="Search for a city"
+                        class="w-full h-[45px] rounded-[30px] border-2 border-[#15719f] pl-4 md:pl-10 text-base md:text-xl cursive-font text-[#15719f] focus:outline-none">
+                    <button id="searchButton"
+                        class="absolute right-0 bg-dashboard text-white h-[45px] w-[90px] md:w-[120px] rounded-[50px] cursive-font text-sm md:text-lg hover:bg-[#0d5c84] transition-colors">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weather Data Box -->
+            <div class="weather-data w-full mb-8 bg-gradient-to-r from-sky-200 to-sky-100 rounded-lg p-6 md:p-8 border-2 border-[#15719f] shadow-lg">
+                <!-- Weather data will be inserted dynamically here -->
+            </div>
+
+            <div class="chart-container"> <!-- Added a wrapper for charts -->
+                <!-- Graph Boxes Container -->
+                <div class="flex flex-col md:flex-row gap-4 md:gap-6 w-full">
+                    <!-- Vertical Bar Chart -->
+                    <div class="w-full md:flex-1 border-2 border-[#15719f] rounded-lg h-[250px] md:h-[300px] p-4">
+                        <canvas id="tempChart"></canvas>
+                    </div>
+
+                    <!-- Doughnut Chart -->
+                    <div class="w-full md:flex-1 border-2 border-[#15719f] rounded-lg h-[250px] md:h-[300px] p-4">
+                        <canvas id="conditionsChart"></canvas>
+                    </div>
+
+                    <!-- Line Chart -->
+                    <div class="w-full md:flex-1 border-2 border-[#15719f] rounded-lg h-[250px] md:h-[300px] p-4">
+                        <canvas id="tempLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Profile -->
+        <div class="absolute top-2 right-2 md:top-6 md:right-6">
+            <img src="profile.jpg" class="h-[50px] w-[50px] md:h-[70px] md:w-[90px] rounded-full">
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
